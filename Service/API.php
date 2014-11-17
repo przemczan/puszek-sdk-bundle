@@ -1,6 +1,6 @@
 <?php
 
-namespace Przemczan\PuszekSDKBundle\API;
+namespace Przemczan\PuszekSDKBundle\Service;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -12,8 +12,10 @@ class API {
      */
     protected $config;
 
+    /**
+     * @var string
+     */
     protected $baseUrl;
-    protected $socketBaseUrl;
 
     /**
      * @param array $config
@@ -27,13 +29,6 @@ class API {
             $config['server']['api']['use_ssl'] ? 's' : '',
             trim($config['server']['api']['host'], '/\\'),
             $this->config['server']['api']['port']
-        );
-
-        $this->socketBaseUrl = sprintf(
-            '%s://%s:%d',
-            $config['server']['socket']['protocol'],
-            trim($config['server']['socket']['host'], '/\\'),
-            $this->config['server']['socket']['port']
         );
     }
 
@@ -76,7 +71,7 @@ class API {
         try {
             $requestOptions = array_merge_recursive(
                 [
-                    'body' => $body = json_encode($data),
+                    'body' => json_encode($data),
                     'headers' => [
                         'puszek-client-name' => $this->config['client']['name'],
                         'Content-type' => 'application/json',
@@ -109,26 +104,5 @@ class API {
         ];
 
         return $this->getData('send-message', $data);
-    }
-
-    /**
-     * @param string $receiver
-     * @param array $subscribe
-     * @param integer $expire
-     * @return mixed|null
-     */
-    public function getSocketUrl($receiver, array $subscribe, $expire)
-    {
-        $params = [
-            'receiver' => $receiver,
-            'subscribe' => $subscribe,
-            'client' => $this->config['client']['name'],
-            'expire' => time() + (int)$expire * 10000,
-        ];
-        $params = http_build_query($params);
-
-        $hash = sha1($this->config['client']['key'] . $params);
-
-        return sprintf('%s/hash:%s?%s', $this->socketBaseUrl, $hash, $params);
     }
 }

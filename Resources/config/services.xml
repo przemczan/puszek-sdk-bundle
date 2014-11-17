@@ -4,11 +4,20 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="przemczan_puszek_sdk.api.class">Przemczan\PuszekSDKBundle\API\API</parameter>
+        <parameter key="przemczan_puszek_sdk.api.class">Przemczan\PuszekSDKBundle\Service\API</parameter>
+        <parameter key="przemczan_puszek_sdk.socket_helper.class">Przemczan\PuszekSDKBundle\Service\SocketHelper</parameter>
+        <parameter key="przemczan_puszek_sdk.twig.socket_helper.class">Przemczan\PuszekSDKBundle\Twig\SocketHelperExtension</parameter>
     </parameters>
     <services>
         <service id="przemczan_puszek_sdk.api" class="%przemczan_puszek_sdk.api.class%">
             <argument /> <!-- config -->
+        </service>
+        <service id="przemczan_puszek_sdk.socket_helper" class="%przemczan_puszek_sdk.socket_helper.class%">
+            <argument /> <!-- config -->
+        </service>
+        <service id="przemczan_puszek_sdk.twig.socket_helper" class="%przemczan_puszek_sdk.twig.socket_helper.class%">
+            <argument type="service" id="przemczan_puszek_sdk.socket_helper" />
+            <tag name="twig.extension" />
         </service>
     </services>
 </container>

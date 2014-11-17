@@ -27,5 +27,8 @@ class PrzemczanPuszekSDKExtension extends Extension
 
         $container->getDefinition('przemczan_puszek_sdk.api')
             ->replaceArgument(0, $config);
+
+        $container->getDefinition('przemczan_puszek_sdk.socket_helper')
+            ->replaceArgument(0, $config);
     }
 }
