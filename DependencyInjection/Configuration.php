@@ -1,6 +1,6 @@
 <?php
 
-namespace Puszek\PuszekClientBundle\DependencyInjection;
+namespace Przemczan\PuszekSDKBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('puszek_puszek_client');
+        $rootNode = $treeBuilder->root('przemczan_puszek_sdk');
 
         $rootNode
             ->children()

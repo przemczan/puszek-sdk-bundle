@@ -1,2 +1,2 @@
-puszek-client-bundle
+puszek-bundle
 ====================

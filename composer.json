@@ -1,7 +1,7 @@
 {
-    "name": "przemczan/puszek-client-bundle",
+    "name": "przemczan/puszek-bundle",
     "type": "symfony-bundle",
-    "description": "Puszek Client Bundle",
+    "description": "Puszek Bundle",
     "keywords": [],
     "license": "Commercial",
     "authors": [

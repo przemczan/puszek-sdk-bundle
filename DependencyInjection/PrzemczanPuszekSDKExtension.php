@@ -1,6 +1,6 @@
 <?php
 
-namespace Puszek\PuszekClientBundle\DependencyInjection;
+namespace Przemczan\PuszekSDKBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class PuszekPuszekClientExtension extends Extension
+class PrzemczanPuszekSDKExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -25,7 +25,7 @@ class PuszekPuszekClientExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        $container->getDefinition('puszek_client.api')
+        $container->getDefinition('przemczan_puszek_sdk.api')
             ->replaceArgument(0, $config);
     }
 }

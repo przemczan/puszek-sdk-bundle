@@ -1,6 +1,6 @@
 <?php
 
-namespace Puszek\PuszekClientBundle\API;
+namespace Przemczan\PuszekSDKBundle\API;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
