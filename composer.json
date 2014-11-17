@@ -1,7 +1,7 @@
 {
-    "name": "przemczan/puszek-bundle",
+    "name": "przemczan/puszek-sdk-bundle",
     "type": "symfony-bundle",
-    "description": "Puszek Bundle",
+    "description": "Puszek SDK sBundle",
     "keywords": [],
     "license": "Commercial",
     "authors": [
