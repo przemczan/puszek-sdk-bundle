@@ -3,6 +3,7 @@
 namespace Puszek\PuszekClientBundle\API;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class API {
 
@@ -12,6 +13,7 @@ class API {
     protected $config;
 
     protected $baseUrl;
+    protected $socketBaseUrl;
 
     /**
      * @param array $config
@@ -19,10 +21,19 @@ class API {
     public function __construct(array $config)
     {
         $this->config = $config;
-        $this->baseUrl = sprintf(
-            'http%s://%s',
-            $config['server']['use_ssl'] ? 's' : '',
-            trim($config['server']['host'], '/\\')
+
+        $this->apiBaseUrl = sprintf(
+            'http%s://%s:%d',
+            $config['server']['api']['use_ssl'] ? 's' : '',
+            trim($config['server']['api']['host'], '/\\'),
+            $this->config['server']['api']['port']
+        );
+
+        $this->socketBaseUrl = sprintf(
+            '%s://%s:%d',
+            $config['server']['socket']['protocol'],
+            trim($config['server']['socket']['host'], '/\\'),
+            $this->config['server']['socket']['port']
         );
     }
 
@@ -32,7 +43,7 @@ class API {
 
         if (!$client) {
             $client = new Client([
-                    'base_url' => $this->baseUrl
+                    'base_url' => $this->apiBaseUrl
                 ]);
         }
 
@@ -60,12 +71,12 @@ class API {
      * @param array $requestOptions
      * @return mixed|null
      */
-    public function getData($path, array $data = [], $method = 'GET', array $params = [], $requestOptions = [])
+    public function getData($path, array $data = null, $method = 'POST', array $params = [], $requestOptions = [])
     {
         try {
             $requestOptions = array_merge_recursive(
                 [
-                    'body' => json_encode($data),
+                    'body' => $body = json_encode($data),
                     'headers' => [
                         'puszek-client-name' => $this->config['client']['name'],
                         'Content-type' => 'application/json',
@@ -74,12 +85,12 @@ class API {
                 $requestOptions
             );
             $request = $this->getRequest($path, $params, $method, $requestOptions);
-            $request->setHeader('puszek-security-hash', sha1($this->config['client']['key'] . $request->getQuery()));
+            $request->setHeader('puszek-security-hash', sha1($this->config['client']['key'] . $request->getBody()));
             $response = $this->getClient()->send($request);
 
             return $response->json();
         } catch (RequestException $e) {
-            return null;
+            return $e->getResponse()->json();
         }
     }
 
@@ -91,12 +102,33 @@ class API {
      */
     public function sendMessage($sender, $message, array $receivers)
     {
-        $params = [
+        $data = [
             'receivers' => $receivers,
             'message' => $message,
             'sender' => $sender,
         ];
 
-        return $this->getData('send-message', [], 'GET', $params);
+        return $this->getData('send-message', $data);
+    }
+
+    /**
+     * @param string $receiver
+     * @param array $subscribe
+     * @param integer $expire
+     * @return mixed|null
+     */
+    public function getSocketUrl($receiver, array $subscribe, $expire)
+    {
+        $params = [
+            'receiver' => $receiver,
+            'subscribe' => $subscribe,
+            'client' => $this->config['client']['name'],
+            'expire' => time() + (int)$expire * 10000,
+        ];
+        $params = http_build_query($params);
+
+        $hash = sha1($this->config['client']['key'] . $params);
+
+        return sprintf('%s/hash:%s?%s', $this->socketBaseUrl, $hash, $params);
     }
 }
