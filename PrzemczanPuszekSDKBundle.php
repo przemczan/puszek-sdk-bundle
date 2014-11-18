@@ -1,9 +1,9 @@
 <?php
 
-namespace Przemczan\PuszekSDKBundle;
+namespace Przemczan\PuszekSdkBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class PrzemczanPuszekSDKBundle extends Bundle
+class PrzemczanPuszekSdkBundle extends Bundle
 {
 }

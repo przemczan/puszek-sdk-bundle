@@ -1,6 +1,6 @@
 <?php
 
-namespace Przemczan\PuszekSDKBundle\DependencyInjection;
+namespace Przemczan\PuszekSdkBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

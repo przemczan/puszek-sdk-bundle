@@ -1,6 +1,6 @@
 <?php
 
-namespace Przemczan\PuszekSDKBundle\DependencyInjection;
+namespace Przemczan\PuszekSdkBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

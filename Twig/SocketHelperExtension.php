@@ -1,8 +1,8 @@
 <?php
 
-namespace Przemczan\PuszekSDKBundle\Twig;
+namespace Przemczan\PuszekSdkBundle\Twig;
 
-use Przemczan\PuszekSDKBundle\Service\SocketHelper;
+use Przemczan\PuszekSdkBundle\Service\SocketHelper;
 
 class SocketHelperExtension extends \Twig_Extension
 {

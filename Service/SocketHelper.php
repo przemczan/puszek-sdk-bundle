@@ -1,6 +1,6 @@
 <?php
 
-namespace Przemczan\PuszekSDKBundle\Service;
+namespace Przemczan\PuszekSdkBundle\Service;
 
 
 class SocketHelper {
