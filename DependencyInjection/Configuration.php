@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('host')->cannotBeEmpty()->end()
                                 ->scalarNode('port')->defaultValue('5000')->cannotBeEmpty()->end()
-                                ->booleanNode('protocol')->defaultValue('ws')->cannotBeEmpty()->end()
+                                ->scalarNode('protocol')->defaultValue('ws')->cannotBeEmpty()->end()
                             ->end()
                         ->end()
                     ->end()
