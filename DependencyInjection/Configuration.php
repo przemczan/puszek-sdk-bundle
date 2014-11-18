@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('host')->cannotBeEmpty()->end()
                                 ->scalarNode('port')->defaultValue('5001')->cannotBeEmpty()->end()
-                                ->booleanNode('use_ssl')->defaultFalse()->cannotBeEmpty()->end()
+                                ->booleanNode('use_ssl')->defaultFalse()->end()
                             ->end()
                         ->end()
                         ->arrayNode('socket')
