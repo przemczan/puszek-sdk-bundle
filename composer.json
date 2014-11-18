@@ -18,5 +18,8 @@
         "symfony/http-kernel": "~2.4",
         "twig/extensions": "~1.0"
     },
+    "autoload": {
+        "psr-4": { "Przemczan\\PuszekSdkBundle\\": "" }
+    },
     "minimum-stability": "stable"
 }
