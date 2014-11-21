@@ -36,11 +36,11 @@ class SocketHelper {
      * @param integer $expire
      * @return mixed|null
      */
-    public function getSocketUrl($receiver, array $subscribe, $expire)
+    public function getSocketUrl($receiver, array $subscribe, $expire = 600)
     {
         $params = [
             'receiver' => $receiver,
-            'subscribe' => $subscribe,
+            'subscribe' => array_unique(array_map('trim', $subscribe)),
             'client' => $this->config['client']['name'],
             'expire' => (time() + (int)$expire) * 1000,
         ];

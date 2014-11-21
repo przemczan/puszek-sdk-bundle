@@ -98,8 +98,8 @@ class API {
     public function sendMessage($sender, $message, array $receivers)
     {
         $data = [
-            'receivers' => $receivers,
-            'message' => $message,
+            'receivers' => array_unique(array_map('trim', $receivers)),
+            'message' => is_string($message) ? $message : json_encode($message),
             'sender' => $sender,
         ];
 
