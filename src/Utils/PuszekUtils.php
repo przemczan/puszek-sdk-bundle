@@ -1,9 +1,11 @@
 <?php
 
-namespace Przemczan\PuszekSdkBundle\Service;
+namespace Przemczan\PuszekSdkBundle\Utils;
 
 
-class SocketHelper {
+class PuszekUtils
+{
+    const ERROR_INVALID_HASH_DATA = 1;
 
     /**
      * @var array
@@ -24,9 +26,9 @@ class SocketHelper {
 
         $this->baseUrl = sprintf(
             '%s://%s:%d',
-            $config['server']['socket']['protocol'],
-            trim($config['server']['socket']['host'], '/\\'),
-            $this->config['server']['socket']['port']
+            $config['servers']['socket']['protocol'],
+            trim($config['servers']['socket']['host'], '/\\'),
+            $this->config['servers']['socket']['port']
         );
     }
 
@@ -45,9 +47,21 @@ class SocketHelper {
             'expire' => (time() + (int)$expire) * 1000,
         ];
         $params = http_build_query($params);
-
-        $hash = sha1($this->config['client']['key'] . $params);
+        $hash = $this->hash($params);
 
         return sprintf('%s/hash:%s?%s', $this->baseUrl, $hash, $params);
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    public function hash($string)
+    {
+        if (!is_string($string) or !method_exists($string, '__toString') or !is_null($string)) {
+            throw new \InvalidArgumentException('Invalid has data', self::ERROR_INVALID_HASH_DATA);
+        }
+
+        return sha1($this->config['client']['key'] . (string)$string);
     }
 }

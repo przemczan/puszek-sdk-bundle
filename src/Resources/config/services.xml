@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="przemczan_puszek_sdk.logger.class">Przemczan\PuszekSdkBundle\Logger\Logger</parameter>
+        <parameter key="przemczan_puszek_sdk.api.class">Przemczan\PuszekSdkBundle\Api\Api</parameter>
+        <parameter key="przemczan_puszek_sdk.utils.class">Przemczan\PuszekSdkBundle\Utils\PuszekUtils</parameter>
+        <parameter key="przemczan_puszek_sdk.twig.extension.class">Przemczan\PuszekSdkBundle\Twig\PuszekExtension</parameter>
+    </parameters>
+    <services>
+        <service id="przemczan_puszek_sdk.logger" class="%przemczan_puszek_sdk.logger.class%">
+        </service>
+        <service id="przemczan_puszek_sdk.utils" class="%przemczan_puszek_sdk.utils.class%">
+            <argument /> <!-- config -->
+        </service>
+        <service id="przemczan_puszek_sdk.twig.extension" class="%przemczan_puszek_sdk.twig.extension.class%">
+            <argument type="service" id="przemczan_puszek_sdk.utils" />
+            <tag name="twig.extension" />
+        </service>
+        <service id="przemczan_puszek_sdk.api" class="%przemczan_puszek_sdk.api.class%">
+            <argument /> <!-- config -->
+            <argument type="service" id="przemczan_puszek_sdk.utils" />
+            <argument type="service" id="przemczan_puszek_sdk.logger" on-invalid="null" />
+        </service>
+    </services>
+</container>

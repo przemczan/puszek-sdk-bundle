@@ -2,21 +2,21 @@
 
 namespace Przemczan\PuszekSdkBundle\Twig;
 
-use Przemczan\PuszekSdkBundle\Service\SocketHelper;
+use Przemczan\PuszekSdkBundle\Utils\PuszekUtils;
 
-class SocketHelperExtension extends \Twig_Extension
+class PuszekExtension extends \Twig_Extension
 {
     /**
-     * @var SocketHelper
+     * @var PuszekUtils
      */
-    protected $socketHelper;
+    protected $puszekUtils;
 
     /**
-     * @param SocketHelper $socketHelper
+     * @param PuszekUtils $puszekUtils
      */
-    public function __construct(SocketHelper $socketHelper)
+    public function __construct(PuszekUtils $puszekUtils)
     {
-        $this->socketHelper = $socketHelper;
+        $this->puszekUtils = $puszekUtils;
     }
 
     /**
@@ -39,7 +39,7 @@ class SocketHelperExtension extends \Twig_Extension
      */
     public function getSocketUrl($receiver, array $subscribe, $expire = 600)
     {
-        return $this->socketHelper->getSocketUrl($receiver, $subscribe, $expire);
+        return $this->puszekUtils->getSocketUrl($receiver, $subscribe, $expire);
     }
 
     /**

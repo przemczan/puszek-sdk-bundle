@@ -19,7 +19,7 @@
         "twig/extensions": "~1.0"
     },
     "autoload": {
-        "psr-4": { "Przemczan\\PuszekSdkBundle\\": "" }
+        "psr-4": { "Przemczan\\PuszekSdkBundle\\": "src" }
     },
     "minimum-stability": "stable"
 }
