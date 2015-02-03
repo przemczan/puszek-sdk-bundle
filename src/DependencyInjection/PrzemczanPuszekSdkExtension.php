@@ -4,6 +4,7 @@ namespace Przemczan\PuszekSdkBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -27,6 +28,11 @@ class PrzemczanPuszekSdkExtension extends Extension
 
         $container->getDefinition('przemczan_puszek_sdk.api')
             ->replaceArgument(0, $config);
+
+        if (!empty($config['api_logger'])) {
+            $container->getDefinition('przemczan_puszek_sdk.api')
+                ->replaceArgument(2, new Reference($config['api_logger']));
+        }
 
         $container->getDefinition('przemczan_puszek_sdk.utils')
             ->replaceArgument(0, $config);

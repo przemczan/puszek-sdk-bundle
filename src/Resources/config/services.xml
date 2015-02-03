@@ -11,6 +11,7 @@
     </parameters>
     <services>
         <service id="przemczan_puszek_sdk.logger" class="%przemczan_puszek_sdk.logger.class%">
+            <argument type="service" id="logger" on-invalid="null" />
         </service>
         <service id="przemczan_puszek_sdk.utils" class="%przemczan_puszek_sdk.utils.class%">
             <argument /> <!-- config -->

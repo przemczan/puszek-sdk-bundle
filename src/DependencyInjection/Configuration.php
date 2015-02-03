@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('key')->isRequired()->cannotBeEmpty()->end()
                     ->end()
                 ->end()
+                ->scalarNode('api_logger')->end()
             ->end();
 
         return $treeBuilder;
