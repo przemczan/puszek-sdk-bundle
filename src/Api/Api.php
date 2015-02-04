@@ -2,124 +2,50 @@
 
 namespace Przemczan\PuszekSdkBundle\Api;
 
-use GuzzleHttp\Client;
-use Przemczan\PuszekSdkBundle\Logger\LoggerInterface;
-use Przemczan\PuszekSdkBundle\Utils\PuszekUtils;
-
-class Api {
-
-    /**
-     * @var array
-     */
-    protected $config;
+class Api
+{
+    const ERROR_SEND_MESSAGE_INVALID_SENDER = 1;
+    const ERROR_SEND_MESSAGE_NO_RECEIVERS   = 2;
 
     /**
-     * @var string
+     * @var ApiConnector
      */
-    protected $baseUrl;
+    protected $apiConnector;
 
     /**
-     * @var PuszekUtils
+     * @param ApiConnector $apiConnector
      */
-    protected $puszekUtils;
-
-    /**
-     * @var SubscriberInterface
-     */
-    protected $logger;
-
-    /**
-     * @param array $config
-     * @param PuszekUtils $puszekUtils
-     * @param LoggerInterface|null $logger
-     */
-    public function __construct(array $config, PuszekUtils $puszekUtils, LoggerInterface $logger = null)
+    public function __construct(ApiConnector $apiConnector)
     {
-        $this->config = $config;
-        $this->puszekUtils = $puszekUtils;
-        $this->logger = $logger;
-
-        $this->apiBaseUrl = sprintf(
-            'http%s://%s:%d',
-            $config['servers']['api']['use_ssl'] ? 's' : '',
-            trim($config['servers']['api']['host'], '/\\'),
-            $this->config['servers']['api']['port']
-        );
+        $this->apiConnector = $apiConnector;
     }
 
     /**
-     * @return Client
-     */
-    protected function getClient()
-    {
-        static $client;
-
-        if (!$client) {
-            $client = new Client([
-                'base_url' => $this->apiBaseUrl
-            ]);
-            if ($this->logger) {
-                $client->getEmitter()->attach($this->logger);
-            }
-        }
-
-        return $client;
-    }
-
-    /**
-     * @param $path
-     * @param array $params
-     * @param string $method
-     * @param array $requestOptions
-     * @return \GuzzleHttp\Message\RequestInterface
-     */
-    public function getRequest($path, array $params = [], $method = 'GET', $requestOptions = [])
-    {
-        $url = trim($path . '?' . http_build_query($params), '?');
-        return $this->getClient()->createRequest($method, $url, $requestOptions);
-    }
-
-    /**
-     * @param $path
-     * @param array $data
-     * @param string $method
-     * @param array $params
-     * @param array $requestOptions
-     * @return mixed|null
-     */
-    public function getData($path, array $data = null, $method = 'POST', array $params = [], $requestOptions = [])
-    {
-        $requestOptions = array_merge_recursive(
-            [
-                'body' => json_encode($data),
-                'headers' => [
-                    'puszek-client-name' => $this->config['client']['name'],
-                    'Content-type' => 'application/json',
-                ]
-            ],
-            $requestOptions
-        );
-        $request = $this->getRequest($path, $params, $method, $requestOptions);
-        $hash = $this->puszekUtils->hash($request->getBody());
-        $request->setHeader('puszek-security-hash', $hash);
-
-        return $this->getClient()->send($request)->json();
-    }
-
-    /**
-     * @param $sender
-     * @param $message
-     * @param $receivers
+     * @param string $sender
+     * @param string $message
+     * @param array $receivers
      * @return mixed|null
      */
     public function sendMessage($sender, $message, array $receivers)
     {
+        if (!is_string($sender)) {
+            throw new \InvalidArgumentException(
+                sprintf('Sender has to be a string, got "%s"', gettype($sender)),
+                self::ERROR_SEND_MESSAGE_INVALID_SENDER
+            );
+        }
+
+        $receivers = array_diff(array_unique(array_map('trim', $receivers)), ['']);
+        if (!count($receivers)) {
+            throw new \InvalidArgumentException('Define at least one receiver.', self::ERROR_SEND_MESSAGE_NO_RECEIVERS);
+        }
+
         $data = [
-            'receivers' => array_unique(array_map('trim', $receivers)),
+            'receivers' => $receivers,
             'message' => is_string($message) ? $message : json_encode($message),
             'sender' => $sender,
         ];
 
-        return $this->getData('send-message', $data);
+        return $this->apiConnector->getData('send-message', $data);
     }
 }

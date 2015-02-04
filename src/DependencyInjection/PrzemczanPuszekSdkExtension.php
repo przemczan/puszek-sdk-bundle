@@ -26,11 +26,11 @@ class PrzemczanPuszekSdkExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        $container->getDefinition('przemczan_puszek_sdk.api')
+        $container->getDefinition('przemczan_puszek_sdk.api_connector')
             ->replaceArgument(0, $config);
 
         if (!empty($config['api_logger'])) {
-            $container->getDefinition('przemczan_puszek_sdk.api')
+            $container->getDefinition('przemczan_puszek_sdk.api_connector')
                 ->replaceArgument(2, new Reference($config['api_logger']));
         }
 

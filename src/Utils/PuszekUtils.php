@@ -58,8 +58,11 @@ class PuszekUtils
      */
     public function hash($string)
     {
-        if (!is_string($string) or !method_exists($string, '__toString') or !is_null($string)) {
-            throw new \InvalidArgumentException('Invalid has data', self::ERROR_INVALID_HASH_DATA);
+        if (!is_string($string) and !method_exists($string, '__toString') and !is_null($string)) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid hash data [%s]', gettype($string)),
+                self::ERROR_INVALID_HASH_DATA
+            );
         }
 
         return sha1($this->config['client']['key'] . (string)$string);

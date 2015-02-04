@@ -5,6 +5,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="przemczan_puszek_sdk.logger.class">Przemczan\PuszekSdkBundle\Logger\Logger</parameter>
+        <parameter key="przemczan_puszek_sdk.api_connector.class">Przemczan\PuszekSdkBundle\Api\ApiConnector</parameter>
         <parameter key="przemczan_puszek_sdk.api.class">Przemczan\PuszekSdkBundle\Api\Api</parameter>
         <parameter key="przemczan_puszek_sdk.utils.class">Przemczan\PuszekSdkBundle\Utils\PuszekUtils</parameter>
         <parameter key="przemczan_puszek_sdk.twig.extension.class">Przemczan\PuszekSdkBundle\Twig\PuszekExtension</parameter>
@@ -13,6 +14,7 @@
         <service id="przemczan_puszek_sdk.logger" class="%przemczan_puszek_sdk.logger.class%">
             <argument type="service" id="logger" on-invalid="null" />
         </service>
+
         <service id="przemczan_puszek_sdk.utils" class="%przemczan_puszek_sdk.utils.class%">
             <argument /> <!-- config -->
         </service>
@@ -20,10 +22,20 @@
             <argument type="service" id="przemczan_puszek_sdk.utils" />
             <tag name="twig.extension" />
         </service>
-        <service id="przemczan_puszek_sdk.api" class="%przemczan_puszek_sdk.api.class%">
+
+        <service id="przemczan_puszek_sdk.logger.api" parent="przemczan_puszek_sdk.logger">
+            <argument type="service" id="logger" on-invalid="null" />
+            <call method="setName">
+                <argument>API</argument>
+            </call>
+        </service>
+        <service id="przemczan_puszek_sdk.api_connector" class="%przemczan_puszek_sdk.api_connector.class%" public="false">
             <argument /> <!-- config -->
             <argument type="service" id="przemczan_puszek_sdk.utils" />
-            <argument type="service" id="przemczan_puszek_sdk.logger" on-invalid="null" />
+            <argument type="service" id="przemczan_puszek_sdk.logger.api" />
+        </service>
+        <service id="przemczan_puszek_sdk.api" class="%przemczan_puszek_sdk.api.class%">
+            <argument type="service" id="przemczan_puszek_sdk.api_connector" />
         </service>
     </services>
 </container>
