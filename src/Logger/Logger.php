@@ -14,6 +14,11 @@ class Logger implements LoggerInterface
     protected $logger;
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * @param PsrLoggerInterface $logger
      */
     public function __construct(PsrLoggerInterface $logger = null)
@@ -22,12 +27,40 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    protected function formatMessage()
+    {
+        return trim(sprintf('%s [%s]', $this->name, join(', ', func_get_args())));
+    }
+
+    /**
      * @param BeforeEvent $event
      */
     public function onBefore(BeforeEvent $event)
     {
         if ($this->logger) {
-            // TODO: implement
+            $request = $event->getRequest();
+            $this->logger->info($this->formatMessage($request->getMethod(), $request->getUrl()), [
+                'requestHeaders' => $request->getHeaders(),
+                'requestBody' => (string)$request->getBody()
+            ]);
         }
     }
 
@@ -37,7 +70,17 @@ class Logger implements LoggerInterface
     public function onError(ErrorEvent $event)
     {
         if ($this->logger) {
-            // TODO: implement
+            $request = $event->getRequest();
+            $response = $event->getResponse();
+            $responseBody = $response ? (string)$response->getBody() : null;
+            $responseHeaders = $response ? $response->getHeaders() : null;
+
+            $this->logger->info($this->formatMessage($request->getMethod(), $request->getUrl()), [
+                'requestHeaders' => $request->getHeaders(),
+                'requestBody' => (string)$request->getBody(),
+                'responseHeaders' => $responseHeaders,
+                'responseBody' => $responseBody,
+            ]);
         }
     }
 
