@@ -47,6 +47,6 @@ class PuszekExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'przemczan_puszek_sdk_socket';
+        return 'przemczan_puszek_sdk';
     }
 }
